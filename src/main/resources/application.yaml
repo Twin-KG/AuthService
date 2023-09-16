@@ -19,7 +19,7 @@ spring:
 server:
   servlet:
     context-path: /api
-  port: 9101
+  port: 443
 
 ## JWT Configuration ##
 jwt:
