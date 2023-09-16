@@ -1,0 +1,27 @@
+spring:
+  datasource:
+    driverClassName: org.postgresql.Driver
+    #    url: jdbc:postgresql://dpg-chl4kabhp8uej71otieg-a.singapore-postgres.render.com/portfolio_backend_crx4
+    #    username: dev
+    #    password: Cx7UIZPxKNZPAZEjRmqBd91MK4kjq7y4
+    url: jdbc:postgresql://dpg-ck1hqavhdsdc73f5dpe0-a.singapore-postgres.render.com/test_ftev
+    username: test_ftev_user
+    password: mgchZgUmPlnoHjFNO0bx11FmULg4xTZR
+#    url: jdbc:postgresql://localhost/team_portfolio
+#    username: postgres
+#    password: admin
+  jpa:
+    hibernate.ddl-auto: create
+    generate-ddl: true
+    show-sql: true
+
+## Server Configuration ##
+server:
+  servlet:
+    context-path: /api
+  port: 8080
+
+## JWT Configuration ##
+jwt:
+  secret: 2b44b0b00fd822d8ce753e54dac3dc4e06c2725f7db930f3b9924468b53194dbccdbe23d7baa5ef5fbc414ca4b2e64700bad60c5a7c45eaba56880985582fba4
+  expiration: 36000000
