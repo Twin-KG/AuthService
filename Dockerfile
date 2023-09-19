@@ -6,5 +6,7 @@ MAINTAINER TWINKG
 # Add the application's jar to the container
 COPY target/auth-service-0.0.1-SNAPSHOT.jar auth-service.jar
 
+EXPOSE 9010
+
 #execute the application
 ENTRYPOINT ["java","-jar","/auth-service.jar"]
