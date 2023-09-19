@@ -8,15 +8,20 @@ import hackathon.dev.authservice.repo.UserRepository;
 import hackathon.dev.authservice.service.UserService;
 import io.micrometer.common.util.StringUtils;
 import lombok.AllArgsConstructor;
+import org.apache.commons.lang.RandomStringUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+
+import static hackathon.dev.authservice.constant.UserConstant.USER_NOT_FOUND_BY_EMAIL;
 
 @Service
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Optional<User> findUserByUsername(String username){
@@ -54,6 +59,30 @@ public class UserServiceImpl implements UserService {
             }
             return null;
         }
+    }
+
+    @Override
+    public User resetPasswordByEmail(String email) {
+        Optional<User> userOptional = userRepository.findUserByEmail(email);
+        if (userOptional.isEmpty()) {
+            throw new UserNotFoundException(USER_NOT_FOUND_BY_EMAIL + " " + email);
+        }
+
+        User user = userOptional.get();
+        String passwordInPlainText = generatePassword();
+        user.setPassword(encodePassword(passwordInPlainText));
+        userRepository.save(user);
+
+//        emailService.sendNewPasswordEmail(user.getFirstName(), password, user.getEmail());
+        return user;
+    }
+
+    private String generatePassword() {
+        return RandomStringUtils.randomAlphabetic(10);
+    }
+
+    private String encodePassword(String password) {
+        return passwordEncoder.encode(password);
     }
 
 }
