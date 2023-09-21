@@ -35,6 +35,7 @@ public class JwtUtilities{
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
+
     public Date extractExpiration(String token) { return extractClaim(token, Claims::getExpiration); }
 
     public Boolean validateToken(String token, UserDetails userDetails) {

@@ -13,18 +13,19 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import static hackathon.dev.authservice.constant.UserConstant.*;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.CONFLICT;
 
 @RestControllerAdvice
 public class ExceptionHandling {
 
     @ExceptionHandler(UsernameAlreadyExistException.class)
     public ResponseEntity<ZResponse> usernameAlreadyExistException() {
-        return createHttpResponse(BAD_REQUEST, USERNAME_ALREADY_EXIST);
+        return createHttpResponse(CONFLICT, USERNAME_ALREADY_EXIST);
     }
 
     @ExceptionHandler(EmailAlreadyExistException.class)
     public ResponseEntity<ZResponse> emailAlreadyExistException() {
-        return createHttpResponse(BAD_REQUEST, EMAIL_ALREADY_EXIST);
+        return createHttpResponse(CONFLICT, EMAIL_ALREADY_EXIST);
     }
 
     @ExceptionHandler(UserNotFoundException.class)

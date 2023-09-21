@@ -34,7 +34,7 @@ public class SecurityServiceImpl implements SecurityService {
     @Override
     @Transactional
     public String login(LoginUserDto loginDto) {
-        final Optional<User> userByUsername = userService.findUserByUsername(loginDto.getUsername());
+        final Optional<User> userByUsername = userService.findUserByUsernameOrEmail(loginDto.getUsername());
         if(userByUsername.isPresent()){
             User loginUser = userByUsername.get();
             boolean isMatchPwd = passwordEncoder.matches(loginDto.getPassword(), loginUser.getPassword());
@@ -42,7 +42,7 @@ public class SecurityServiceImpl implements SecurityService {
                 return generateAccessToken(loginUser);
             }
         }else{
-            throw new UserNotFoundException("Username is not found");
+            throw new UserNotFoundException("Username or email is not found");
         }
         return null;
     }
