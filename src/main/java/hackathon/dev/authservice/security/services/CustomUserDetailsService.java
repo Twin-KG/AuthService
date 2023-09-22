@@ -1,26 +1,27 @@
 package hackathon.dev.authservice.security.services;
 
-import hackathon.dev.authservice.model.User;
-import hackathon.dev.authservice.repo.UserRepository;
+import hackathon.dev.authservice.client.ProfessionServiceClient;
+import hackathon.dev.authservice.domain.ZResponse;
+import hackathon.dev.authservice.dto.Professions;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 @AllArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
+    private final ProfessionServiceClient professionServiceClient;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> userOptional = userRepository.findUserByUsername(username);
-        User user = userOptional.orElseThrow(() -> new UsernameNotFoundException("Invalid Username ... !"));
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        ZResponse<Professions> professionsZResponse = professionServiceClient.getUserByIdOrUsernameOrEmail(null, null, email);
+        if(professionsZResponse == null || professionsZResponse.getData() == null){
+            throw new UsernameNotFoundException("User is not found ... !");
+        }
 
-        return new SecurityUser(user);
+        return new SecurityUser(professionsZResponse.getData());
     }
 }

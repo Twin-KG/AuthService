@@ -1,0 +1,23 @@
+spring:
+  config:
+    import: optional:configserver:http://localhost:9001/
+  datasource:
+    url: jdbc:mysql://10.10.1.136:3306/profession_service
+    username: hackathon
+    password: Zayar2142000
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+## Eureka Configuration ##
+eureka:
+  instance:
+    prefer-ip-address: true
+    hostname: 10.10.1.80
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://10.10.1.136:9002/eureka/

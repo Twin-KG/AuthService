@@ -1,14 +1,13 @@
 package hackathon.dev.authservice.dto;
 
 import hackathon.dev.authservice.constant.ActiveStatus;
-import lombok.*;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class ResponseUser {
+public class Professions {
 
     private Long id;
 
@@ -24,4 +23,5 @@ public class ResponseUser {
     private String profileLink;
 
     private ActiveStatus activeStatus;
+
 }

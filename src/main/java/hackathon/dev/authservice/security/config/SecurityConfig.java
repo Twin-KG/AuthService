@@ -2,7 +2,6 @@ package hackathon.dev.authservice.security.config;
 
 import hackathon.dev.authservice.security.filter.JwtAuthenticationFilter;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -19,10 +18,9 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain (HttpSecurity http) throws Exception {
-        http.csrf().disable().cors().disable()
-                .authorizeHttpRequests()
-                .anyRequest().permitAll()
-                .and()
+        http.csrf(c -> c.disable()).cors(c -> c.disable())
+                .authorizeHttpRequests(req ->
+                        req.anyRequest().permitAll())
                 .addFilterAt(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

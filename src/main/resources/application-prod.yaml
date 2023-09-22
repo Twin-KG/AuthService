@@ -1,0 +1,22 @@
+spring:
+  config:
+    import: optional:configserver:http://host.docker.internal:9001/
+  datasource:
+    url: jdbc:mysql://host.docker.internal:3306/profession_service
+    username: hackathon
+    password: Zayar2142000
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+## Eureka Configuration ##
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    registerWithEureka: true
+    fetchRegistry: true
+    serviceUrl:
+      defaultZone: http://host.docker.internal:9002/eureka/

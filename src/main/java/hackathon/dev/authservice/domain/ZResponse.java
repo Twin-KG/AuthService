@@ -7,9 +7,9 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ZResponse {
+public class ZResponse<T> {
     private boolean success;
     private int code;
-    private Object data;
+    private T data;
     private String message;
 }

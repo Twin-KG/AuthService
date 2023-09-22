@@ -1,9 +1,9 @@
 package hackathon.dev.authservice.security.services;
 
-import hackathon.dev.authservice.model.User;
+import hackathon.dev.authservice.constant.ActiveStatus;
+import hackathon.dev.authservice.dto.Professions;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -11,11 +11,11 @@ import java.util.Collection;
 @AllArgsConstructor
 public class SecurityUser implements UserDetails {
 
-    private User user;
+    private Professions user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).toList();
+        return null;
     }
 
     @Override
@@ -25,7 +25,7 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return user.getEmail();
     }
 
     @Override
@@ -35,7 +35,7 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return ActiveStatus.ACTIVE.equals(user.getActiveStatus());
     }
 
     @Override
@@ -45,6 +45,6 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return user.isEnabled();
+        return ActiveStatus.ACTIVE.equals(user.getActiveStatus());
     }
 }

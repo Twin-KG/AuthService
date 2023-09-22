@@ -1,26 +1,17 @@
 package hackathon.dev.authservice.controller;
 
 import hackathon.dev.authservice.domain.ZResponse;
-import hackathon.dev.authservice.dto.LoginUserDto;
-import hackathon.dev.authservice.dto.RegisterUserDto;
-import hackathon.dev.authservice.dto.ResponseBuilder;
-import hackathon.dev.authservice.dto.ResponseUser;
+import hackathon.dev.authservice.dto.*;
 import hackathon.dev.authservice.exception.ExceptionHandling;
-import hackathon.dev.authservice.model.User;
 import hackathon.dev.authservice.security.services.SecurityService;
-import hackathon.dev.authservice.service.UserService;
 import lombok.AllArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.Objects;
 
 import static hackathon.dev.authservice.constant.SecurityConstant.*;
 
@@ -30,50 +21,44 @@ import static hackathon.dev.authservice.constant.SecurityConstant.*;
 @AllArgsConstructor
 public class SecurityController extends ExceptionHandling {
 
-    private static final Logger logger = LoggerFactory.getLogger(SecurityController.class);
-
     private final SecurityService securityService;
-    private final UserService userService;
 
-    @GetMapping("/me")
-    public ResponseEntity<ZResponse> getCurrentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Optional<User> me = userService.findUserByUsername((String) authentication.getPrincipal());
-
-        if(me.isPresent()){
-            return ResponseEntity.ok(
-                    ResponseBuilder.build(true, HttpStatus.OK, "Successfully fetched", me));
-        }
-
-        return new ResponseEntity<>(
-                ResponseBuilder.build(true, HttpStatus.NO_CONTENT, "Who are you", me), HttpStatus.BAD_REQUEST);
-    }
+//    @GetMapping("/me")
+//    public ResponseEntity<ZResponse> getCurrentUser() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        Optional<User> me = userService.findUserByUsername((String) authentication.getPrincipal());
+//
+//        if(me.isPresent()){
+//            return ResponseEntity.ok(
+//                    ResponseBuilder.build(true, HttpStatus.OK, "Successfully fetched", me));
+//        }
+//
+//        return new ResponseEntity<>(
+//                ResponseBuilder.build(true, HttpStatus.NO_CONTENT, "Who are you", me), HttpStatus.BAD_REQUEST);
+//    }
 
     @PostMapping("/login")
-    public ResponseEntity<ZResponse> login(@RequestBody LoginUserDto loginDto){
-        String accessToken = securityService.login(loginDto);
-        if (StringUtils.hasText(accessToken)){
+    public ResponseEntity<ZResponse<Professions>> login(@RequestBody LoginUserDto loginDto){
+        LoginResponseDto response = securityService.login(loginDto);
+        if (!Objects.isNull(response) && StringUtils.hasText(response.getToken())){
+
             return new ResponseEntity<>(
-                    ResponseBuilder.build(true, HttpStatus.OK, "Successfully Login", null),
-                    getJwtHeader(accessToken), HttpStatus.OK);
+                    ZResponse.<Professions>builder().success(true).message("Successfully Login").data(response.getProfessions()).build(),
+                    getJwtHeader(response.getToken()), HttpStatus.OK);
         }
 
         return ResponseEntity.badRequest().body(
-                ResponseBuilder.build(false, HttpStatus.FORBIDDEN, "Failed Login", null));
+                ZResponse.<Professions>builder().success(false).message("Invalid credentials").build());
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ZResponse> addNewUser(@RequestBody RegisterUserDto user){
-        final ResponseUser responseUser = securityService.register(user);
-        return ResponseEntity.ok(
-                ResponseBuilder.build(true, HttpStatus.OK, "Successfully Registered", responseUser));
-    }
-
-    @GetMapping("/resetPassword/{email}")
-    public ResponseEntity<ZResponse> resetPassword(@PathVariable("email") String email) {
-        User user = userService.resetPasswordByEmail(email);
-        return ResponseEntity.ok(
-                ResponseBuilder.build(true, HttpStatus.OK, "Successfully reset password", user));
+    public ResponseEntity<ZResponse<Professions>> addNewUser(@RequestBody RegisterUserDto user){
+        final Professions professions = securityService.register(user);
+        return ResponseEntity.ok( ZResponse.<Professions>builder()
+                .success(true)
+                .message("Successfully registered...")
+                .data(professions)
+                .build());
     }
 
     private HttpHeaders getJwtHeader(String token) {

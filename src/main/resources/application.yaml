@@ -1,44 +1,22 @@
 spring:
+  profiles:
+    active: prod
   application:
-    name: SecurityService
-  datasource:
-    driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://dpg-ck1hqavhdsdc73f5dpe0-a.singapore-postgres.render.com/test_ftev
-    username: test_ftev_user
-    password: mgchZgUmPlnoHjFNO0bx11FmULg4xTZR
-#    url: jdbc:postgresql://localhost/team_portfolio
-#    username: postgres
-#    password: admin
-  jpa:
-    hibernate.ddl-auto: update
-    generate-ddl: true
-    show-sql: true
+    name: PROFESSIONSECURITYSERVICE
 
 ## Server Configuration ##
 server:
   servlet:
-    context-path: /api
+    context-path: /api/v1
   port: 9010
 
 ## Configuring info endpoint
 info:
   app:
-    name: Accounts Microservice
-    description: Eazy Bank Accounts Application
+    name: Auth Service
     version: 1.0.0
 
 ## JWT Configuration ##
 jwt:
   secret: 2b44b0b00fd822d8ce753e54dac3dc4e06c2725f7db930f3b9924468b53194dbccdbe23d7baa5ef5fbc414ca4b2e64700bad60c5a7c45eaba56880985582fba4
   expiration: 36000000
-
-## Eureka Configuration ##
-eureka:
-  instance:
-    prefer-ip-address: true
-  client:
-    registerWithEureka: true
-    fetchRegistry: true
-    serviceUrl:
-#      defaultZone: http://localhost:9002/eureka/
-      defaultZone: http://host.docker.internal:9002/eureka/
