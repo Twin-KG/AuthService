@@ -64,7 +64,7 @@ public class SecurityServiceImpl implements SecurityService {
                 professionsZResponse = professionServiceClient
                         .getUserByIdOrUsernameOrEmail(null, null, registerUserDto.getEmail());
             } catch (FeignException e){
-                e.printStackTrace();
+                //
             }
 
             if(professionsZResponse != null){
