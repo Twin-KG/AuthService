@@ -13,4 +13,5 @@ public class RegisterUserDto {
     private String password;
     private String email;
     private Role role;
+    private Long categoryId;
 }

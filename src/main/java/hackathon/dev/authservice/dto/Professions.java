@@ -2,7 +2,6 @@ package hackathon.dev.authservice.dto;
 
 import hackathon.dev.authservice.constant.ActiveStatus;
 import hackathon.dev.authservice.enumeration.Role;
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,5 +24,6 @@ public class Professions {
     private Role role;
 
     private ActiveStatus activeStatus;
+    private Long categoryId;
 
 }
