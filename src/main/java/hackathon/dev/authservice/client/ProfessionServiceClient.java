@@ -17,6 +17,10 @@ public interface ProfessionServiceClient {
             @RequestParam(required = false) String username,
             @RequestParam(required = false) String email);
 
+    @RequestMapping(method = RequestMethod.GET, value = "api/v1/professions/mail", consumes = "application/json")
+    ZResponse<Professions> getUserByEmail(
+            @RequestParam String email);
+
     @RequestMapping(method = RequestMethod.POST, value = "api/v1/professions", consumes = "application/json")
     ZResponse<Professions> saveProfessions(@RequestBody Professions professions);
 

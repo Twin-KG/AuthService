@@ -1,17 +1,22 @@
 package hackathon.dev.authservice.controller;
 
+import hackathon.dev.authservice.constant.CustomMessage;
+import hackathon.dev.authservice.constant.QueueConfig;
 import hackathon.dev.authservice.domain.ZResponse;
 import hackathon.dev.authservice.dto.*;
 import hackathon.dev.authservice.exception.ExceptionHandling;
 import hackathon.dev.authservice.security.services.SecurityService;
 import lombok.AllArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.Objects;
+import java.util.UUID;
 
 import static hackathon.dev.authservice.constant.SecurityConstant.*;
 
@@ -54,6 +59,7 @@ public class SecurityController extends ExceptionHandling {
     @PostMapping("/register")
     public ResponseEntity<ZResponse<Professions>> addNewUser(@RequestBody RegisterUserDto user){
         final Professions professions = securityService.register(user);
+
         return ResponseEntity.ok( ZResponse.<Professions>builder()
                 .success(true)
                 .message("Successfully registered...")

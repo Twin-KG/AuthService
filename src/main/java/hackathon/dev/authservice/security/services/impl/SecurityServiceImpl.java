@@ -3,6 +3,8 @@ package hackathon.dev.authservice.security.services.impl;
 import feign.FeignException;
 import hackathon.dev.authservice.client.ProfessionServiceClient;
 import hackathon.dev.authservice.constant.ActiveStatus;
+import hackathon.dev.authservice.constant.CustomMessage;
+import hackathon.dev.authservice.constant.QueueConfig;
 import hackathon.dev.authservice.domain.ZResponse;
 import hackathon.dev.authservice.dto.LoginResponseDto;
 import hackathon.dev.authservice.dto.LoginUserDto;
@@ -15,8 +17,12 @@ import hackathon.dev.authservice.security.utils.JwtUtilities;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -27,6 +33,7 @@ public class SecurityServiceImpl implements SecurityService {
     private final ModelMapper mapper;
 
     private final ProfessionServiceClient professionServiceClient;
+    private final RabbitTemplate template;
 
     @Override
     @Transactional
@@ -34,7 +41,7 @@ public class SecurityServiceImpl implements SecurityService {
         LoginResponseDto response = new LoginResponseDto();
 
         ZResponse<Professions> professionsZResponse = professionServiceClient
-                .getUserByIdOrUsernameOrEmail(null, loginDto.getUsername(), loginDto.getUsername());
+                .getUserByEmail(loginDto.getUsername());
 
         if(professionsZResponse.getData() != null){
             Professions loginUser = professionsZResponse.getData();
@@ -62,7 +69,7 @@ public class SecurityServiceImpl implements SecurityService {
 
             try{
                 professionsZResponse = professionServiceClient
-                        .getUserByIdOrUsernameOrEmail(null, null, registerUserDto.getEmail());
+                        .getUserByEmail(registerUserDto.getEmail());
             } catch (FeignException e){
                 //
             }
@@ -85,8 +92,18 @@ public class SecurityServiceImpl implements SecurityService {
             e.printStackTrace();
         }
 
+        Professions professions = user.getData();
 
-        return user.getData();
+        // Send to message queue
+        CustomMessage message = new CustomMessage();
+        message.setMessageId(UUID.randomUUID().toString());
+        message.setEmail(professions.getEmail());
+        message.setUsername(professions.getUsername());
+        message.setAccountCreatedDate(new Date());
+        template.convertAndSend(QueueConfig.EXCHANGE,
+                QueueConfig.ROUTING_KEY, message);
+
+        return professions;
     }
 
     private String generateAccessToken(Professions loginUser) {
