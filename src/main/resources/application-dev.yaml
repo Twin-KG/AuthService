@@ -2,14 +2,14 @@ spring:
   config:
     import: optional:configserver:http://localhost:9001/
   datasource:
-    url: jdbc:mysql://10.10.1.136:3306/content_service
+    url: jdbc:mysql://10.10.1.136:3306/profession_service
     username: hackathon
     password: Zayar2142000
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
 
 ## Eureka Configuration ##
 eureka:

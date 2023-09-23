@@ -2,7 +2,7 @@ spring:
   config:
     import: optional:configserver:http://host.docker.internal:9001/
   datasource:
-    url: jdbc:mysql://host.docker.internal:3306/content_service
+    url: jdbc:mysql://host.docker.internal:3306/profession_service
     username: hackathon
     password: Zayar2142000
     driver-class-name: com.mysql.cj.jdbc.Driver

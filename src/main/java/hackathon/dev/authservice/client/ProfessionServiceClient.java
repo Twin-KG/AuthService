@@ -13,7 +13,7 @@ public interface ProfessionServiceClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "api/v1/professions", consumes = "application/json")
     ZResponse<Professions> getUserByIdOrUsernameOrEmail(
-            @RequestParam(required = false) Long id,
+            @RequestParam(required = false) String id,
             @RequestParam(required = false) String username,
             @RequestParam(required = false) String email);
 

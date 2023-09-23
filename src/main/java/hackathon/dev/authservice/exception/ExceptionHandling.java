@@ -1,5 +1,6 @@
 package hackathon.dev.authservice.exception;
 
+import hackathon.dev.authservice.domain.CustomHttpResponse;
 import hackathon.dev.authservice.domain.ZResponse;
 import hackathon.dev.authservice.dto.ResponseBuilder;
 import hackathon.dev.authservice.exception.domain.*;
