@@ -4,9 +4,9 @@ FROM openjdk:17-jdk-slim as build
 MAINTAINER TWINKG
 
 # Add the application's jar to the container
-COPY target/content-service-0.0.1-SNAPSHOT.jar content-service.jar
+COPY target/auth-service-0.0.1-SNAPSHOT.jar auth-service.jar
 
-EXPOSE 9012
+EXPOSE 9010
 
 #execute the application
 ENTRYPOINT ["java","-jar","/auth-service.jar"]
