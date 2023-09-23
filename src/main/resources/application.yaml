@@ -2,18 +2,18 @@ spring:
   profiles:
     active: prod
   application:
-    name: PROFESSIONSECURITYSERVICE
+    name: CONTENTSERVICE
 
 ## Server Configuration ##
 server:
   servlet:
     context-path: /api/v1
-  port: 9010
+  port: 9012
 
 ## Configuring info endpoint
 info:
   app:
-    name: Auth Service
+    name: Content Service
     version: 1.0.0
 
 ## JWT Configuration ##
