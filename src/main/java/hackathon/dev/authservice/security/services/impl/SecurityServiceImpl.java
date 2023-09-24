@@ -6,10 +6,7 @@ import hackathon.dev.authservice.constant.ActiveStatus;
 import hackathon.dev.authservice.constant.CustomMessage;
 import hackathon.dev.authservice.constant.QueueConfig;
 import hackathon.dev.authservice.domain.ZResponse;
-import hackathon.dev.authservice.dto.LoginResponseDto;
-import hackathon.dev.authservice.dto.LoginUserDto;
-import hackathon.dev.authservice.dto.Professions;
-import hackathon.dev.authservice.dto.RegisterUserDto;
+import hackathon.dev.authservice.dto.*;
 import hackathon.dev.authservice.exception.domain.EmailAlreadyExistException;
 import hackathon.dev.authservice.exception.domain.UserNotFoundException;
 import hackathon.dev.authservice.security.services.SecurityService;
@@ -40,15 +37,16 @@ public class SecurityServiceImpl implements SecurityService {
     public LoginResponseDto login(LoginUserDto loginDto) {
         LoginResponseDto response = new LoginResponseDto();
 
-        ZResponse<Professions> professionsZResponse = professionServiceClient
+        ZResponse<AuthProfessionDto> professionsZResponse = professionServiceClient
                 .getUserByEmail(loginDto.getUsername());
 
         if(professionsZResponse.getData() != null){
-            Professions loginUser = professionsZResponse.getData();
+            AuthProfessionDto loginUser = professionsZResponse.getData();
             boolean isMatchPwd = passwordEncoder.matches(loginDto.getPassword(), loginUser.getPassword());
             if(isMatchPwd){
-                response.setToken(generateAccessToken(loginUser));
-                response.setProfessions(loginUser);
+                response.setToken(generateAccessToken(loginUser.getUsername()));
+                response.setType("Bearer");
+                response.setUser(loginUser);
                 return response;
             }
         }else{
@@ -59,13 +57,13 @@ public class SecurityServiceImpl implements SecurityService {
 
     @Override
     @Transactional
-    public Professions register(RegisterUserDto registerUserDto) {
+    public AuthProfessionDto register(RegisterUserDto registerUserDto) {
 
-        ZResponse<Professions> user = null;
+        ZResponse<AuthProfessionDto> user = null;
 
         try{
 
-            ZResponse<Professions> professionsZResponse = null;
+            ZResponse<AuthProfessionDto> professionsZResponse = null;
 
             try{
                 professionsZResponse = professionServiceClient
@@ -92,7 +90,7 @@ public class SecurityServiceImpl implements SecurityService {
             e.printStackTrace();
         }
 
-        Professions professions = user.getData();
+        AuthProfessionDto professions = user.getData();
 
         // Send to message queue
         CustomMessage message = new CustomMessage();
@@ -107,6 +105,10 @@ public class SecurityServiceImpl implements SecurityService {
     }
 
     private String generateAccessToken(Professions loginUser) {
-        return jwtUtilities.generateToken(loginUser.getUsername(), null);
+        return generateAccessToken(loginUser.getUsername());
+    }
+
+    private String generateAccessToken(String username) {
+        return jwtUtilities.generateToken(username, null);
     }
 }

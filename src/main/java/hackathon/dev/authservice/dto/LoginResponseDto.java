@@ -7,5 +7,6 @@ import lombok.Setter;
 @Setter
 public class LoginResponseDto {
     private String token;
-    private Professions professions;
+    private String type;
+    private AuthProfessionDto user;
 }

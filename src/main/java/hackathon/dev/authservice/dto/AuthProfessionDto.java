@@ -5,10 +5,11 @@ import hackathon.dev.authservice.enumeration.Role;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
-public class Professions {
-
+public class AuthProfessionDto {
     private Long id;
 
     private String username;
@@ -24,7 +25,6 @@ public class Professions {
     private Role role;
 
     private ActiveStatus activeStatus;
-    private Long categoryId;
+    private List<Tier> tierList;
     private Category category;
-
 }

@@ -1,6 +1,7 @@
 package hackathon.dev.authservice.client;
 
 import hackathon.dev.authservice.domain.ZResponse;
+import hackathon.dev.authservice.dto.AuthProfessionDto;
 import hackathon.dev.authservice.dto.Professions;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,10 +19,10 @@ public interface ProfessionServiceClient {
             @RequestParam(required = false) String email);
 
     @RequestMapping(method = RequestMethod.GET, value = "api/v1/professions/mail", consumes = "application/json")
-    ZResponse<Professions> getUserByEmail(
+    ZResponse<AuthProfessionDto> getUserByEmail(
             @RequestParam String email);
 
     @RequestMapping(method = RequestMethod.POST, value = "api/v1/professions", consumes = "application/json")
-    ZResponse<Professions> saveProfessions(@RequestBody Professions professions);
+    ZResponse<AuthProfessionDto> saveProfessions(@RequestBody Professions professions);
 
 }

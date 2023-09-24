@@ -43,24 +43,20 @@ public class SecurityController extends ExceptionHandling {
 //    }
 
     @PostMapping("/login")
-    public ResponseEntity<ZResponse<Professions>> login(@RequestBody LoginUserDto loginDto){
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginUserDto loginDto){
         LoginResponseDto response = securityService.login(loginDto);
         if (!Objects.isNull(response) && StringUtils.hasText(response.getToken())){
-
-            return new ResponseEntity<>(
-                    ZResponse.<Professions>builder().success(true).message("Successfully Login").data(response.getProfessions()).build(),
-                    getJwtHeader(response.getToken()), HttpStatus.OK);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
-        return ResponseEntity.badRequest().body(
-                ZResponse.<Professions>builder().success(false).message("Invalid credentials").build());
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<ZResponse<Professions>> addNewUser(@RequestBody RegisterUserDto user){
-        final Professions professions = securityService.register(user);
+    public ResponseEntity<ZResponse<AuthProfessionDto>> addNewUser(@RequestBody RegisterUserDto user){
+        final AuthProfessionDto professions = securityService.register(user);
 
-        return ResponseEntity.ok( ZResponse.<Professions>builder()
+        return ResponseEntity.ok( ZResponse.<AuthProfessionDto>builder()
                 .success(true)
                 .message("Successfully registered...")
                 .data(professions)
