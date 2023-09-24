@@ -54,6 +54,7 @@ public class SecurityController extends ExceptionHandling {
 
     @PostMapping("/register")
     public ResponseEntity<ZResponse<AuthProfessionDto>> addNewUser(@RequestBody RegisterUserDto user){
+
         final AuthProfessionDto professions = securityService.register(user);
 
         return ResponseEntity.ok( ZResponse.<AuthProfessionDto>builder()
