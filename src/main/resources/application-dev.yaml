@@ -2,7 +2,7 @@ spring:
   config:
     import: optional:configserver:http://localhost:9001/
   datasource:
-    url: jdbc:mysql://10.10.1.69:3306/profession_service
+    url: jdbc:mysql://10.10.1.62:3306/profession_service
     username: hackathon
     password: Zayar2142000
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -11,7 +11,7 @@ spring:
     hibernate:
       ddl-auto: create
   rabbitmq:
-    addresses: 10.10.1.69:5672
+    addresses: 10.10.1.62:5672
 
 ## Eureka Configuration ##
 eureka:
@@ -22,5 +22,5 @@ eureka:
     registerWithEureka: true
     fetchRegistry: true
     serviceUrl:
-      defaultZone: http://10.10.1.69:9002/eureka/
+      defaultZone: http://10.10.1.62:9002/eureka/
 
